@@ -1,12 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/frontend/public/sitemap.xml"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/index.html"
-    }
-  ]
+  "buildCommand": "npm run build --prefix frontend",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "npm install --prefix frontend"
 }
