@@ -8,7 +8,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Google দিয়ে লগইন করার ফাংশন
+  // Google দিয়ে লগইন করার ফাংশন
   const handleGoogleLogin = async () => {
     setError("");
     setLoading(true);
@@ -34,37 +34,70 @@ export default function Login() {
       window.location.href = "/";
     } catch (err) {
       console.error("Google Auth Error:", err);
-      setError("Google দিয়ে লগইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।");
+      setError("Google দিয়ে লগইন করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[70vh]">
+    <div className="relative flex justify-center items-center min-h-[70vh] overflow-hidden">
+      {/* 🌟 ব্যাকগ্রাউন্ড গ্লো এনিমেশন (Background Light) */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-slate-900/80 border border-white/10 p-8 rounded-3xl shadow-2xl backdrop-blur-xl"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl -z-10"
+      />
+
+      {/* 📦 মূল লগইন কার্ডের এনিমেশন */}
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-md bg-slate-900/80 border border-white/10 p-8 rounded-3xl shadow-2xl backdrop-blur-xl relative z-10"
       >
-        <h2 className="text-2xl font-black text-center text-white mb-2">
+        <motion.h2
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="text-xl font-black text-center text-white mb-1 tracking-wide"
+        >
+          Daffodil Lost and Found System
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="text-sm font-semibold text-cyan-400 text-center mb-6"
+        >
           লগইন করুন 🔐
-        </h2>
-        <p className="text-xs text-slate-400 text-center mb-6">
-          আপনার জিমেইল (Gmail) অ্যাকাউন্ট ব্যবহার করে সহজেই লগইন করুন
-        </p>
+        </motion.p>
 
         {error && (
-          <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs p-3 rounded-xl mb-4 text-center font-semibold break-words">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs p-3 rounded-xl mb-4 text-center font-semibold break-words"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
-        {/* Google Login Button */}
-        <button
+        {/* 🔘 Google Login Button (Hover & Click Animation) */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 px-4 rounded-xl transition-all cursor-pointer disabled:opacity-50 shadow-lg"
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 px-4 rounded-xl transition-colors cursor-pointer disabled:opacity-50 shadow-lg"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -84,8 +117,8 @@ export default function Login() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
             />
           </svg>
-          <span>{loading ? "লগইন হচ্ছে... ⏳" : "Google দিয়ে লগইন করুন"}</span>
-        </button>
+          <span>{loading ? "লগইন হচ্ছে... ⏳" : "Google দিয়ে লগইন করুন"}</span>
+        </motion.button>
 
         <div className="border-t border-white/5 mt-6 pt-4 text-center">
           <p className="text-xs text-slate-400">
