@@ -256,7 +256,9 @@ function HomePageContent() {
       {/* স্ট্যাটাস বার */}
       <div className="bg-white/70 dark:bg-white/5 backdrop-blur-xl py-4 px-6 rounded-3xl mb-10 border border-slate-200 dark:border-white/10 max-w-6xl mx-auto grid grid-cols-2 gap-6 shadow-xl transition-colors duration-500">
         <div className="p-3 bg-slate-100 dark:bg-slate-950/40 rounded-2xl border border-slate-200 dark:border-white/5 text-center">
-          <p className="text-2xl font-black text-rose-600 dark:text-rose-500">{lostCount}</p>
+          <p className="text-2xl font-black text-rose-600 dark:text-rose-500">
+            {lostCount}
+          </p>
           <p className="text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-wider">
             Lost Items
           </p>
@@ -279,7 +281,8 @@ function HomePageContent() {
               📦 ক্যাম্পাস ক্যাটালগ
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              আপনার হারিয়ে যাওয়া বা খুঁজে পাওয়া জিনিসটি গ্যালারি থেকে ফিল্টার করুন
+              আপনার হারিয়ে যাওয়া বা খুঁজে পাওয়া জিনিসটি গ্যালারি থেকে ফিল্টার
+              করুন
             </p>
           </div>
           <input
@@ -432,7 +435,9 @@ function HomePageContent() {
                     }}
                   />
                 ) : (
-                  <span className="text-5xl text-slate-400 dark:text-slate-700">🖼️</span>
+                  <span className="text-5xl text-slate-400 dark:text-slate-700">
+                    🖼️
+                  </span>
                 )}
               </div>
 
@@ -594,13 +599,3 @@ export default function App() {
     </Router>
   );
 }
-```<ElicitationsGroup>
-  <Elicitation>
-    <Query>পরিবর্তনগুলো প্রয়োগ করার পর লাইট ও ডার্ক মোডে গ্যালারি ও ম্যাপের ভিজ্যুয়াল পরিবর্তন কি ঠিকঠাক দেখা যাচ্ছে?</Query>
-    <Identifiers/>
-  </Elicitation>
-</ElicitationsGroup>
-<FollowUp>
-  <Suggestion>হ্যাঁ, লাইট ও ডার্ক মোডের থিম সুইচিং এখন পুরোপুরি পারফেক্ট কাজ করছে!</Suggestion>
-  <Suggestion>Dashboard বা ReportItem পেজে ডার্ক/লাইট মোড স্টাইল করার জন্য সাহায্য চাই</Suggestion>
-</FollowUp>
