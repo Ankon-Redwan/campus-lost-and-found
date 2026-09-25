@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ThemeToggle from "./components/ThemeToggle"; // 👈 ThemeToggle ইমপোর্ট করা হলো
 
 const DIU_CENTER = [23.937, 90.267];
 
@@ -50,10 +51,12 @@ function NavigationBar({ user, handleLogout }) {
 
   if (isAuthPage) {
     return (
-      <motion.div className="text-center mb-8">
+      <motion.div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 tracking-wide">
           Daffodil Lost and Found System 🔍
         </h1>
+        {/* লগইন/রেজিস্ট্রেশন পেজেও ডার্ক মোড সুইচ */}
+        <ThemeToggle />
       </motion.div>
     );
   }
@@ -112,6 +115,9 @@ function NavigationBar({ user, handleLogout }) {
         >
           About
         </Link>
+
+        {/* 👈 অ্যানিমেটেড ডার্ক/লাইট মোড সুইচ */}
+        <ThemeToggle />
 
         {user && (
           <div className="flex items-center gap-3 bg-white/5 pl-3 pr-1 py-1 rounded-xl border border-white/10">
@@ -533,7 +539,7 @@ function AppContent() {
   const handleLogout = () => {
     localStorage.clear(); // সম্পূর্ণ সেশন ডেটা মুছে ফেলবে
     setUser(null);
-    alert("সফলভাবে লগ আউট হয়েছে! 👋");
+    alert("সফলভাবে লগ আউট হয়েছে! 👋");
     window.location.href = "/login";
   };
 
@@ -546,7 +552,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* প্রটেক্টেড পেজসমূহ (লগইন ছাড়া ব্যবহার করা যাবে না) */}
+          {/* প্রটেক্টেড পেজসমূহ (লগইন ছাড়া ব্যবহার করা যাবে না) */}
           <Route
             path="/"
             element={
