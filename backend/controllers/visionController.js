@@ -22,7 +22,7 @@ exports.analyzeImage = async (req, res) => {
       'Analyze this image for a Campus Lost and Found system. Extract details and return ONLY a JSON object with this structure: {"primaryLabel": "Short Item Name", "labels": ["Tag1", "Tag2", "Tag3"], "description": "Detailed visual description of the item including color, brand, condition, and notable features."}';
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           role: "user",
@@ -58,7 +58,7 @@ exports.analyzeImage = async (req, res) => {
     }
 
     res.status(500).json({
-      error: "AI দিয়ে ছবি বিশ্লেষণ করতে ব্যর্থ হয়েছে: " + error.message,
+      error: "AI দিয়ে ছবি বিশ্লেষণ করতে ব্যর্থ হয়েছে: " + error.message,
     });
   }
 };
