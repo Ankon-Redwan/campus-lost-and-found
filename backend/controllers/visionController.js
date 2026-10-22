@@ -1,9 +1,7 @@
-const OpenAI = require("openai");
+const { GoogleGenAI } = require("@google/genai");
 const fs = require("fs");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 exports.analyzeImage = async (req, res) => {
   try {
@@ -13,36 +11,38 @@ exports.analyzeImage = async (req, res) => {
 
     const imagePath = req.file.path;
     const imageBuffer = fs.readFileSync(imagePath);
-    const base64Image = `data:${req.file.mimetype};base64,${imageBuffer.toString("base64")}`;
+    const base64Image = imageBuffer.toString("base64");
 
-    // Temp File Cleanup
+    // Temp file Cleanup
     if (fs.existsSync(imagePath)) {
       fs.unlinkSync(imagePath);
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
+    const prompt =
+      'Analyze this image for a Campus Lost and Found system. Extract details and return ONLY a JSON object with this structure: {"primaryLabel": "Short Item Name", "labels": ["Tag1", "Tag2", "Tag3"], "description": "Detailed visual description of the item including color, brand, condition, and notable features."}';
+
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: [
         {
           role: "user",
-          content: [
+          parts: [
+            { text: prompt },
             {
-              type: "text",
-              text: 'Analyze this image for a Campus Lost and Found system. Extract details and return ONLY a JSON object with this structure: {"primaryLabel": "Short Item Name", "labels": ["Tag1", "Tag2", "Tag3"], "description": "Detailed visual description of the item including color, brand, condition, and notable features."}',
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: base64Image,
+              inlineData: {
+                mimeType: req.file.mimetype,
+                data: base64Image,
               },
             },
           ],
         },
       ],
-      response_format: { type: "json_object" },
+      config: {
+        responseMimeType: "application/json",
+      },
     });
 
-    const parsedData = JSON.parse(response.choices[0].message.content);
+    const parsedData = JSON.parse(response.text);
 
     res.status(200).json({
       success: true,
@@ -51,7 +51,7 @@ exports.analyzeImage = async (req, res) => {
       description: parsedData.description || "",
     });
   } catch (error) {
-    console.error("OpenAI Vision Error:", error);
+    console.error("Gemini Vision Error:", error);
 
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
