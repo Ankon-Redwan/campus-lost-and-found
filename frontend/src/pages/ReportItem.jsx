@@ -34,7 +34,7 @@ const ReportItem = () => {
     }
   };
 
-  // 🤖 Google Cloud Vision AI Integration
+  // 🤖 OpenAI Vision AI Integration
   const handleGenerateAiDescription = async () => {
     if (!selectedImage) {
       alert("দয়া করে প্রথমে একটি ছবি সিলেক্ট করুন!");
@@ -44,36 +44,36 @@ const ReportItem = () => {
     setIsAiLoading(true);
     setMessage("");
 
-    // Multer এর সাথে মেলাতে FormData তৈরি করা
     const aiFormData = new FormData();
     aiFormData.append("image", selectedImage);
 
     try {
       const response = await fetch(`${API_BASE}/api/vision/analyze-image`, {
         method: "POST",
-        body: aiFormData, // JSON না পাঠিয়ে FormData পাঠাতে হবে
+        body: aiFormData,
       });
 
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Vision API থেকে আসা ট্যাগ ও টাইটেল অটো-ফিল করা
         const tagsString = result.labels ? result.labels.join(", ") : "";
 
         setFormData((prev) => ({
           ...prev,
           title: result.primaryLabel || prev.title,
-          description: prev.description
-            ? `${prev.description}\n[AI Tags: ${tagsString}]`
-            : `সম্ভাব্য অবজেক্ট (AI ট্যাগ): ${tagsString}`,
+          description:
+            result.description ||
+            (tagsString
+              ? `সম্ভাব্য অবজেক্ট (AI ট্যাগ): ${tagsString}`
+              : prev.description),
         }));
 
-        setMessage("✨ Google Cloud Vision AI সফলভাবে ছবি বিশ্লেষণ করেছে!");
+        setMessage("✨ AI সফলভাবে ছবি বিশ্লেষণ করেছে!");
       } else {
-        alert(result.error || "Vision AI তথ্য সনাক্ত করতে পারেনি।");
+        alert(result.error || "AI তথ্য সনাক্ত করতে পারেনি।");
       }
     } catch (error) {
-      console.error("Vision AI Error:", error);
+      console.error("AI Error:", error);
       alert("সার্ভারে যোগাযোগ করতে সমস্যা হয়েছে!");
     } finally {
       setIsAiLoading(false);
@@ -190,8 +190,8 @@ const ReportItem = () => {
             }}
           >
             {isAiLoading
-              ? "🤖 Google Vision AI ছবি প্রসেস করছে..."
-              : "✨ Auto Fill with Google Cloud Vision AI"}
+              ? "🤖 AI ছবি প্রসেস করছে..."
+              : "✨ Auto Fill with OpenAI Vision"}
           </button>
         )}
 
