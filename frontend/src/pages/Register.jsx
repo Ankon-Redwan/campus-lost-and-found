@@ -68,9 +68,12 @@ export default function Register() {
 
   return (
     <div className="max-w-md mx-auto bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl mt-12">
-      <h2 className="text-2xl font-black text-white text-center mb-6 tracking-wide">
-        Sign Up
+      <h2 className="text-xl font-black text-white text-center mb-1 tracking-wide">
+        Daffodil Lost and Found System
       </h2>
+      <p className="text-sm font-semibold text-cyan-400 text-center mb-6">
+        Sign Up 📝
+      </p>
 
       {/* Google Sign-Up Button */}
       <button
@@ -98,7 +101,7 @@ export default function Register() {
           />
         </svg>
         <span>
-          {loading ? "সাইন-আপ হচ্ছে... ⏳" : "Google দিয়ে Sign Up করুন"}
+          {loading ? "সাইন-আপ হচ্ছে... ⏳" : "Google দিয়ে Sign Up করুন"}
         </span>
       </button>
 

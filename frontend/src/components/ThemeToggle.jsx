@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("theme") !== "light";
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
 
   const toggleTheme = () => {
     setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark");
   };
 
   return (
@@ -21,12 +32,16 @@ export default function ThemeToggle() {
       {/* 🌙 / ☀️ আইকন ব্যাকগ্রাউন্ড */}
       <div className="absolute inset-0 flex justify-between items-center px-2.5 text-xs select-none">
         <span
-          className={`transition-opacity duration-300 ${isDark ? "opacity-100" : "opacity-0"}`}
+          className={`transition-opacity duration-300 ${
+            isDark ? "opacity-100" : "opacity-0"
+          }`}
         >
           🌙
         </span>
         <span
-          className={`transition-opacity duration-300 ${isDark ? "opacity-0" : "opacity-100"}`}
+          className={`transition-opacity duration-300 ${
+            isDark ? "opacity-0" : "opacity-100"
+          }`}
         >
           ☀️
         </span>

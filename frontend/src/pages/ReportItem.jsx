@@ -44,48 +44,40 @@ const ReportItem = () => {
     setIsAiLoading(true);
     setMessage("");
 
-    // ইমেজের Blob/File-কে Base64 Data URL-এ রূপান্তর
-    const reader = new FileReader();
-    reader.readAsDataURL(selectedImage);
+    // Multer এর সাথে মেলাতে FormData তৈরি করা
+    const aiFormData = new FormData();
+    aiFormData.append("image", selectedImage);
 
-    reader.onloadend = async () => {
-      const base64ImageUrl = reader.result;
+    try {
+      const response = await fetch(`${API_BASE}/api/vision/analyze-image`, {
+        method: "POST",
+        body: aiFormData, // JSON না পাঠিয়ে FormData পাঠাতে হবে
+      });
 
-      try {
-        // Google Vision এপিআই কল করা (backend-এর /api/vision/analyze-image)
-        const response = await fetch(`${API_BASE}/api/vision/analyze-image`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ imageUrl: base64ImageUrl }),
-        });
+      const result = await response.json();
 
-        const result = await response.json();
+      if (response.ok && result.success) {
+        // Vision API থেকে আসা ট্যাগ ও টাইটেল অটো-ফিল করা
+        const tagsString = result.labels ? result.labels.join(", ") : "";
 
-        if (response.ok && result.success) {
-          // Vision API থেকে আসা ট্যাগ ও টাইটেল ফর্মের ইনপুটে অটো-ফিল করা
-          const tagsString = result.suggestedTags.join(", ");
+        setFormData((prev) => ({
+          ...prev,
+          title: result.primaryLabel || prev.title,
+          description: prev.description
+            ? `${prev.description}\n[AI Tags: ${tagsString}]`
+            : `সম্ভাব্য অবজেক্ট (AI ট্যাগ): ${tagsString}`,
+        }));
 
-          setFormData((prev) => ({
-            ...prev,
-            title: result.suggestedTitle || prev.title,
-            description: prev.description
-              ? `${prev.description}\n[AI Tags: ${tagsString}]`
-              : `সম্ভাব্য অবজেক্ট (AI ট্যাগ): ${tagsString}`,
-          }));
-
-          setMessage("✨ Google Cloud Vision AI সফলভাবে ছবি বিশ্লেষণ করেছে!");
-        } else {
-          alert(result.message || "Vision AI তথ্য সনাক্ত করতে পারেনি।");
-        }
-      } catch (error) {
-        console.error("Vision AI Error:", error);
-        alert("সার্ভারে যোগাযোগ করতে সমস্যা হয়েছে!");
-      } finally {
-        setIsAiLoading(false);
+        setMessage("✨ Google Cloud Vision AI সফলভাবে ছবি বিশ্লেষণ করেছে!");
+      } else {
+        alert(result.error || "Vision AI তথ্য সনাক্ত করতে পারেনি।");
       }
-    };
+    } catch (error) {
+      console.error("Vision AI Error:", error);
+      alert("সার্ভারে যোগাযোগ করতে সমস্যা হয়েছে!");
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   // Submit Form to Backend
